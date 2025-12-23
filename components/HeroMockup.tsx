@@ -11,7 +11,8 @@ const HeroMockup: React.FC = () => {
     // 2 & 3: Message Sent (Phone) AND Synced (GodView) - NO DELAY
     // 4: Deleting Action (Phone)
     // 5: Phone Empty / GodView Intact (Block Result)
-    // 6: Device Reset (Own Result)
+    // 6: Stage 3 Activity Start (Typing Simulation)
+    // 7: Device Reset / Records Retained Result
     
     const [scale, setScale] = useState(1);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -20,24 +21,24 @@ const HeroMockup: React.FC = () => {
         {
             id: 1,
             title: "STAGE 1: MIRROR",
-            desc: "INSTANT CLONE. Every poaching attempt is caught in real-time, appearing in your dashboard the second they hit send.",
-            status: subStep >= 2 ? "SYNC_COMPLETE" : "SYNCING_LIVE...",
+            desc: "INSTANT BACKUP. Every message is saved in real-time. You see exactly what is happening as it happens.",
+            status: subStep >= 2 ? "ACTIVE" : "SYNCING...",
             color: "text-green-500",
             accent: "bg-green-500"
         },
         {
             id: 2,
             title: "STAGE 2: BLOCK",
-            desc: "ANTI-DELETE. The rep wipes the evidence from their phone. GodView ignores the command and keeps every word.",
-            status: "DELETION_BLOCKED",
+            desc: "ANTI-DELETE PROTECTION. If a message is deleted on the phone, GodView ignores it and keeps your history safe.",
+            status: "PROTECTED",
             color: "text-red-500",
             accent: "bg-red-500"
         },
         {
             id: 3,
             title: "STAGE 3: OWN",
-            desc: "PERMANENT ASSET. The client is saved in your GodView Panel forever. Even if the rep deletes the contact, you keep 100% of the relationship.",
-            status: "ASSET_SECURED",
+            desc: "PERMANENT RECORDS. Your client history is saved in your own dashboard forever. You keep 100% of the data.",
+            status: "SECURED",
             color: "text-yellow-500",
             accent: "bg-yellow-500"
         }
@@ -58,11 +59,12 @@ const HeroMockup: React.FC = () => {
                 timer = setTimeout(() => setSubStep(5), 3000); 
                 timer = setTimeout(() => setStage(3), 8500);  
             } else if (stage === 3) {
-                setSubStep(6); 
+                setSubStep(6); // Show typing in stage 3
+                timer = setTimeout(() => setSubStep(7), 4000); 
                 timer = setTimeout(() => {
                     setStage(1);
                     setSubStep(0);
-                }, 10000); 
+                }, 12000); 
             }
         };
 
@@ -111,18 +113,18 @@ const HeroMockup: React.FC = () => {
             </div>
 
             {/* MAIN INTERFACE */}
-            <div ref={containerRef} className="hidden lg:block relative w-full perspective-1000 origin-top" style={{ height: `${620 * scale}px` }}>
+            <div ref={containerRef} className="hidden lg:block relative w-full perspective-1000 origin-top" style={{ height: `${650 * scale}px` }}>
                 <div 
                     className="absolute top-0 left-0 right-0 mx-auto origin-top transform transition-all duration-500"
                     style={{ 
                         width: '1100px',
-                        height: '600px',
+                        height: '630px',
                         transform: `scale(${scale})`,
                     }}
                 >
                     <div className="flex gap-8 h-full">
                         
-                        {/* LEFT: ADMIN GODVIEW PANEL (MODERNIZED ENTERPRISE UI) */}
+                        {/* LEFT: ADMIN GODVIEW PANEL */}
                         <div className="flex-1 flex flex-col bg-[#F8FAFC] rounded-[2.5rem] border-[1px] border-slate-300 shadow-[0_50px_100px_rgba(0,0,0,0.2)] overflow-hidden relative">
                             {/* Modern Header */}
                             <div className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-50">
@@ -130,7 +132,7 @@ const HeroMockup: React.FC = () => {
                                     <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center font-black text-black italic text-lg shadow-[0_4px_12px_rgba(34,197,94,0.3)]">GV</div>
                                     <div className="h-8 w-[1px] bg-slate-200"></div>
                                     <span className="text-slate-800 font-black uppercase tracking-tight text-base flex items-center gap-3">
-                                        GodView Command Center
+                                        GodView Admin Dashboard
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-6">
@@ -161,16 +163,16 @@ const HeroMockup: React.FC = () => {
                                         {/* REFINED CONTACTS LIST */}
                                         <div className="w-64 bg-[#F1F5F9] border-r border-slate-200 p-4 space-y-2.5">
                                             <div className="flex items-center justify-between mb-4 px-1">
-                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Leads</span>
+                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Devices</span>
                                                 <Search size={14} className="text-slate-400" />
                                             </div>
                                             
                                             <div className={`p-3 rounded-2xl flex items-center gap-3 transition-all duration-500 shadow-sm border ${stage === 3 ? 'bg-yellow-500/10 border-yellow-200' : 'bg-white border-slate-200'}`}>
                                                 <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white text-xs ring-2 ring-white">M</div>
                                                 <div className="flex flex-col min-w-0">
-                                                    <span className="text-[11px] font-black text-slate-800 truncate">Michael (VIP Lead)</span>
+                                                    <span className="text-[11px] font-black text-slate-800 truncate">Michael (Lead)</span>
                                                     <span className={`text-[8px] font-bold uppercase italic ${stage === 3 ? 'text-yellow-600' : 'text-green-600'}`}>
-                                                        {stage === 3 ? "PERMANENT ASSET" : "LIVE CAPTURING"}
+                                                        {stage === 3 ? "RECORDS RETAINED" : "BACKING UP"}
                                                     </span>
                                                 </div>
                                             </div>
@@ -189,13 +191,13 @@ const HeroMockup: React.FC = () => {
                                             ))}
                                         </div>
 
-                                        {/* REFINED CHAT INTERFACE */}
+                                        {/* CHAT INTERFACE */}
                                         <div className="flex-1 flex flex-col bg-white relative">
                                             {/* Chat Header */}
                                             <div className="px-8 py-4 border-b border-slate-100 flex items-center justify-between">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                                                    <span className="text-xs font-black text-slate-800 uppercase italic">Live Mirror: Device #8821</span>
+                                                    <div className={`w-3 h-3 rounded-full ${stage === 3 ? 'bg-yellow-500' : 'bg-green-500'}`}></div>
+                                                    <span className="text-xs font-black text-slate-800 uppercase italic">Mirror: Device #8821</span>
                                                 </div>
                                                 <div className="flex gap-2">
                                                     <div className="h-6 w-14 bg-slate-100 rounded-full"></div>
@@ -211,61 +213,63 @@ const HeroMockup: React.FC = () => {
                                                     <span className="text-[9px] text-slate-400 mt-2 font-black uppercase tracking-widest italic">Michael @ 14:02</span>
                                                 </div>
                                                 
-                                                {subStep >= 2 && (
+                                                {subStep >= 2 && subStep <= 5 && (
                                                     <div className="flex flex-col items-end max-w-[85%] ml-auto relative animate-fade-in">
-                                                        <div className="absolute -left-24 top-2 bg-green-500 text-black text-[9px] font-black px-3 py-1 rounded-full shadow-lg z-10 ring-2 ring-white">MIRRORED</div>
+                                                        <div className="absolute -left-24 top-2 bg-green-500 text-black text-[9px] font-black px-3 py-1 rounded-full shadow-lg z-10 ring-2 ring-white">BACKED UP</div>
                                                         <div className="p-4 bg-green-50 border border-green-200 text-slate-900 font-bold rounded-2xl rounded-tr-none shadow-sm text-sm leading-relaxed">
                                                             Wait, I'm moving to a new firm next week. Come with me for a 20% discount? My personal: +1 555-0199
                                                         </div>
-                                                        <span className="text-[9px] text-green-600 mt-2 font-black uppercase tracking-widest italic text-right">Intercepted Poaching Attempt</span>
+                                                        <span className="text-[9px] text-green-600 mt-2 font-black uppercase tracking-widest italic text-right">Captured Successfully</span>
                                                     </div>
                                                 )}
 
                                                 {/* Anti-Delete Warning */}
-                                                {(stage === 2 || stage === 3) && (
+                                                {(stage === 2 || (stage === 3 && subStep < 7)) && (
                                                     <div className="flex flex-col items-center justify-center py-6 animate-fade-in">
                                                         <div className="px-6 py-4 bg-white border-2 border-red-500 rounded-[2rem] text-red-600 text-xs font-black uppercase flex items-center gap-4 shadow-[0_15px_40px_rgba(239,68,68,0.1)] animate-pulse">
                                                             <div className="w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg"><Trash2 size={20} /></div>
                                                             <div className="flex flex-col">
-                                                                <span className="tracking-tighter text-sm italic">DELETION ATTEMPT BLOCKED</span>
-                                                                <span className="text-[9px] text-red-400">DATA SECURED IN PERMANENT VAULT</span>
+                                                                <span className="tracking-tighter text-sm italic">DATA DELETE PREVENTED</span>
+                                                                <span className="text-[9px] text-red-400">MESSAGES STORED SAFELY IN YOUR VAULT</span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 )}
 
-                                                {stage === 3 && (
-                                                    <div className="flex flex-col items-center justify-center animate-fade-in">
-                                                        <div className="px-8 py-5 bg-white border-2 border-yellow-500 rounded-[2rem] text-yellow-600 text-xs font-black uppercase flex items-center gap-4 shadow-[0_15px_40px_rgba(234,179,8,0.1)]">
+                                                {stage === 3 && subStep >= 6 && (
+                                                    <div className="flex flex-col items-center justify-center py-4 animate-fade-in space-y-4">
+                                                        <div className="px-8 py-5 bg-white border-2 border-yellow-500 rounded-[2rem] text-yellow-600 text-xs font-black uppercase flex items-center gap-4 shadow-[0_15px_40px_rgba(234,179,8,0.1)] w-full max-w-sm">
                                                             <div className="w-10 h-10 bg-yellow-500 text-white rounded-full flex items-center justify-center shadow-lg"><Database size={20} /></div>
                                                             <div className="flex flex-col">
-                                                                <span className="tracking-tighter text-sm italic">RELATIONSHIP RETAINED</span>
-                                                                <span className="text-[9px] text-yellow-500/70">CLIENT CONTACT EXPORTABLE AT ANY TIME</span>
+                                                                <span className="tracking-tighter text-sm italic">DATA PERMANENTLY SAVED</span>
+                                                                <span className="text-[9px] text-yellow-500/70">EXPORT AND VIEW AT ANY TIME</span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 )}
                                             </div>
 
-                                            {/* GODVIEW TYPING BAR - PERMANENT MIRROR */}
-                                            <div className="p-6 bg-slate-50 border-t border-slate-200">
-                                                <div className="flex items-center gap-3">
+                                            {/* GODVIEW TYPING BAR - ALWAYS VISIBLE ACROSS ALL STAGES */}
+                                            <div className="p-6 bg-slate-50 border-t border-slate-200 mt-auto">
+                                                <div className="flex items-center gap-4">
                                                     <div className="flex-1 bg-white h-12 rounded-full border border-slate-200 shadow-inner flex items-center px-5 gap-3">
-                                                        <Eye size={18} className="text-green-600 opacity-50" />
+                                                        <Eye size={18} className={`${stage === 3 ? 'text-yellow-600' : 'text-green-600'} opacity-50`} />
                                                         <div className="flex-1 text-[13px] text-slate-700 font-bold italic truncate flex items-center gap-1">
-                                                            {subStep === 1 ? (
+                                                            {(subStep === 1 || subStep === 6) ? (
                                                                 <>
                                                                     <span className="text-slate-400 not-italic mr-1 uppercase text-[10px] tracking-tighter">[MIRRORING]</span>
-                                                                    <span>Wait, I'm moving to a new fi...</span>
-                                                                    <div className="w-0.5 h-4 bg-green-500 animate-pulse"></div>
+                                                                    <span>{subStep === 1 ? "Wait, I'm moving to a new fi..." : "Archiving active session data..."}</span>
+                                                                    <div className={`w-0.5 h-4 ${stage === 3 ? 'bg-yellow-500' : 'bg-green-500'} animate-pulse`}></div>
                                                                 </>
                                                             ) : (
-                                                                <span className="text-slate-400 font-medium not-italic">Monitoring device #8821 activity...</span>
+                                                                <span className="text-slate-400 font-medium not-italic">
+                                                                    {stage === 3 ? "Permanent sync active..." : "Monitoring team activity live..."}
+                                                                </span>
                                                             )}
                                                         </div>
                                                         <Paperclip size={18} className="text-slate-300" />
                                                     </div>
-                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg transition-all ${subStep === 1 ? 'bg-green-500 scale-105' : 'bg-slate-300'}`}>
+                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg transition-all ${(subStep === 1 || subStep === 6) ? (stage === 3 ? 'bg-yellow-500 scale-105 shadow-yellow-500/20' : 'bg-green-500 scale-105 shadow-green-500/20') : 'bg-slate-300'}`}>
                                                         <Send size={20} />
                                                     </div>
                                                 </div>
@@ -276,14 +280,14 @@ const HeroMockup: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* RIGHT: SALES REP WORK PHONE (THE THREAT - DARK/CYBER) */}
+                        {/* RIGHT: SALES REP WORK PHONE */}
                         <div className="w-[340px] bg-[#0F172A] rounded-[3.5rem] border-[12px] border-[#1E293B] shadow-[0_40px_80px_rgba(0,0,0,0.6)] relative overflow-hidden flex flex-col p-4 shrink-0">
                             <div className="absolute top-0 left-0 right-0 h-14 bg-[#1E293B] flex items-center justify-center z-50">
-                                <span className="text-white font-black uppercase italic tracking-tighter text-[10px] opacity-70">Sales Rep Device #8821</span>
+                                <span className="text-white font-black uppercase italic tracking-tighter text-[10px] opacity-70">Team Member Phone #8821</span>
                             </div>
                             
                             <div className="flex-1 bg-black rounded-[2.8rem] overflow-hidden flex flex-col relative mt-10">
-                                {/* Whatsapp Header */}
+                                {/* Messaging App Header */}
                                 <div className="bg-[#075e54] p-4 pt-10 text-white flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center font-bold text-xs italic ring-1 ring-white/20">M</div>
                                     <div className="flex-1 font-bold text-xs italic">Michael (Client)</div>
@@ -313,10 +317,10 @@ const HeroMockup: React.FC = () => {
                                             <div className="absolute inset-0 bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-[60] animate-fade-in">
                                                 <div className="bg-white rounded-[2rem] p-8 w-full shadow-2xl scale-95 animate-fade-in">
                                                     <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4"><Trash2 size={32} /></div>
-                                                    <div className="text-gray-900 font-black text-sm mb-4 uppercase tracking-tighter">DELETE CHAT?</div>
+                                                    <div className="text-gray-900 font-black text-sm mb-4 uppercase tracking-tighter">DELETE HISTORY?</div>
                                                     <div className="space-y-3">
                                                         <div className="bg-red-600 text-white py-4 rounded-2xl text-[10px] font-black cursor-pointer shadow-lg active:scale-90 transition-transform flex items-center justify-center gap-2">
-                                                            <div className="w-2 h-2 bg-white rounded-full animate-ping"></div> DELETE FOR EVERYONE
+                                                            DELETE FOR ALL
                                                         </div>
                                                         <div className="text-gray-400 py-2 text-[10px] font-bold uppercase tracking-widest">CANCEL</div>
                                                     </div>
@@ -328,16 +332,16 @@ const HeroMockup: React.FC = () => {
                                             <div className="w-20 h-20 bg-gray-300/40 rounded-full flex items-center justify-center mb-6 border-2 border-dashed border-gray-500 animate-pulse">
                                                 <MessageSquare size={32} className="text-gray-500" />
                                             </div>
-                                            <div className="text-gray-700 font-black text-xs uppercase tracking-tighter italic">CHATS WIPED</div>
-                                            <p className="text-gray-600 text-[10px] mt-4 font-bold leading-tight uppercase opacity-60">The rep thinks they are safe.</p>
+                                            <div className="text-gray-700 font-black text-xs uppercase tracking-tighter italic">CHATS CLEARED</div>
+                                            <p className="text-gray-600 text-[10px] mt-4 font-bold leading-tight uppercase opacity-60">The rep thinks it's deleted.</p>
                                         </div>
                                     ) : (
                                         <div className="flex flex-col items-center justify-center h-full text-center p-8 bg-gray-100 animate-fade-in">
                                             <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mb-8 border-4 border-gray-300">
                                                 <Smartphone size={40} className="text-gray-400 opacity-50" />
                                             </div>
-                                            <div className="text-gray-900 font-black text-sm uppercase italic tracking-tighter">HARD RESET COMPLETE</div>
-                                            <p className="text-gray-500 text-[11px] mt-4 font-bold leading-relaxed uppercase opacity-40">Device Disconnected from Server</p>
+                                            <div className="text-gray-900 font-black text-sm uppercase italic tracking-tighter">PHONE DATA RESET</div>
+                                            <p className="text-gray-500 text-[11px] mt-4 font-bold leading-relaxed uppercase opacity-40">Device Disconnected from Dashboard</p>
                                         </div>
                                     )}
                                 </div>
@@ -346,11 +350,11 @@ const HeroMockup: React.FC = () => {
                                 <div className="bg-[#f0f2f5] p-3 flex items-center gap-3 border-t border-gray-200">
                                     <div className="flex-1 bg-white h-10 rounded-full border border-gray-300 flex items-center px-4 overflow-hidden shadow-inner">
                                         <span className="text-[12px] text-gray-800 font-bold italic truncate">
-                                            {subStep === 1 ? "Wait, I'm moving to a new fi..." : ""}
+                                            {(subStep === 1 || subStep === 6) ? (subStep === 1 ? "Wait, I'm moving to a new fi..." : "Updating device firmware...") : ""}
                                             {subStep === 0 ? "Type a message..." : ""}
                                         </span>
                                     </div>
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white transition-all ${subStep === 1 ? 'bg-green-500 scale-110 shadow-lg' : 'bg-[#075e54]'}`}>
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white transition-all ${(subStep === 1 || subStep === 6) ? 'bg-green-500 scale-110 shadow-lg' : 'bg-[#075e54]'}`}>
                                         <Send size={18} />
                                     </div>
                                 </div>

@@ -5,50 +5,50 @@ import { CheckCircle2, Zap, ArrowRight } from './Icons';
 const PricingTable: React.FC = () => {
     const tiers = [
         {
-            name: "SOLO HACKER",
+            name: "FREE STARTER",
             price: "$0",
-            desc: "Secure your first sales device and test the GodView protocol.",
+            desc: "Secure one device and try out the basic backup features.",
             features: [
                 "1 Sales Device Sync",
-                "Live Mirroring (0.1s latency)",
-                "7-Day Retention Vault",
-                "Basic Admin Dashboard",
-                "Community Support"
+                "Real-time Mirroring",
+                "7-Day Message Retention",
+                "Standard Dashboard",
+                "Help Center Access"
             ],
             cta: "START FREE",
             color: "gray",
             popular: false
         },
         {
-            name: "TEAM DOMINANCE",
+            name: "PROFESSIONAL TEAM",
             price: "$149",
             period: "/mo",
-            desc: "The standard for growing teams who can't afford to lose a single lead.",
+            desc: "Best for growing teams that want to secure all their customer data.",
             features: [
                 "Up to 10 Sales Devices",
-                "ANTI-DELETE Shield Active",
-                "Lifetime Relationship Vault",
-                "Spy-Cam Performance Heatmaps",
-                "Top Seller Script Cloning",
-                "Priority Support Access"
+                "Anti-Delete Protection",
+                "Lifetime Message Vault",
+                "Performance Analytics",
+                "AI Sales Suggestions",
+                "Priority Support"
             ],
-            cta: "GET GROWTH HACK",
+            cta: "GET STARTED",
             color: "green",
             popular: true
         },
         {
-            name: "ENTERPRISE OPS",
+            name: "ENTERPRISE",
             price: "Custom",
-            desc: "For high-volume organizations requiring total asset security.",
+            desc: "For larger organizations needing custom solutions and full security.",
             features: [
                 "Unlimited Sales Devices",
-                "White-Label Dashboard",
-                "API & CRM Webhook Access",
-                "1-on-1 Closing Strategy",
-                "Dedicated Account Manager",
-                "Full Data Legal Protection"
+                "Custom Setup",
+                "CRM Integration",
+                "Team Training",
+                "Account Manager",
+                "Full Data Control"
             ],
-            cta: "TALK TO EXPERT",
+            cta: "TALK TO US",
             color: "blue",
             popular: false
         }
@@ -58,8 +58,8 @@ const PricingTable: React.FC = () => {
         <div className="py-24 px-4 md:px-8">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter mb-4">THE COST OF <span className="text-green-500">IGNORANCE</span></h2>
-                    <p className="text-gray-400 text-lg font-bold uppercase tracking-widest">Losing one $10k client costs more than 5 years of GodView.</p>
+                    <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter mb-4">CHOOSE YOUR <span className="text-green-500">PLAN</span></h2>
+                    <p className="text-gray-400 text-lg font-bold uppercase tracking-widest">Start protecting your business today.</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -104,7 +104,7 @@ const PricingTable: React.FC = () => {
                                 href="https://app.chatbooster.ai/en-US/signup" 
                                 className={`w-full py-4 rounded-2xl font-black text-center transition-all flex items-center justify-center gap-2 group ${
                                     tier.color === 'green' 
-                                    ? 'bg-green-500 text-black hover:bg-green-400 shadow-[0_10px_30px_rgba(34,197,94,0.3)]' 
+                                    ? 'bg-green-50 text-black hover:bg-green-400 shadow-[0_10px_30px_rgba(34,197,94,0.3)]' 
                                     : 'bg-white/5 text-white border border-white/10 hover:bg-white/10'
                                 }`}
                             >
