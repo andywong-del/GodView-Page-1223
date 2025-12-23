@@ -1,53 +1,73 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Zap, MessageSquare, Smartphone, ArrowRight, ShieldCheck, Trash2, UserX, CheckCircle2, Lock, Search, Eye, Paperclip, Send, BarChart3, Users, Settings, Database, XCircle } from './Icons';
+import { Zap, MessageSquare, Smartphone, ArrowRight, ShieldCheck, Trash2, UserX, CheckCircle2, Lock, Search, Eye, Paperclip, Send, BarChart3, Users, Settings, Database, XCircle, Globe, Layers, Cpu } from './Icons';
 
 const HeroMockup: React.FC = () => {
     const [stage, setStage] = useState(1); // 1: Mirror, 2: Block, 3: Own
+    const [subStep, setSubStep] = useState(0); 
+    // subStep: 
+    // 0: Idle
+    // 1: Typing Poaching Message (Phone)
+    // 2 & 3: Message Sent (Phone) AND Synced (GodView) - NO DELAY
+    // 4: Deleting Action (Phone)
+    // 5: Phone Empty / GodView Intact (Block Result)
+    // 6: Device Reset (Own Result)
+    
     const [scale, setScale] = useState(1);
-    const [repTyping, setRepTyping] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
     const stages = [
         {
             id: 1,
             title: "STAGE 1: MIRROR",
-            desc: "LIVE SYNC. Whatever the rep types on WhatsApp is instantly cloned to your secure vault.",
-            status: "REAL_TIME_SYNCING",
+            desc: "INSTANT CLONE. Every poaching attempt is caught in real-time, appearing in your dashboard the second they hit send.",
+            status: subStep >= 2 ? "SYNC_COMPLETE" : "SYNCING_LIVE...",
             color: "text-green-500",
             accent: "bg-green-500"
         },
         {
             id: 2,
             title: "STAGE 2: BLOCK",
-            desc: "ANTI-DELETE. Rep tries to delete chat history. GodView ignores the command and keeps the data.",
-            status: "DELETION_REFUSED",
+            desc: "ANTI-DELETE. The rep wipes the evidence from their phone. GodView ignores the command and keeps every word.",
+            status: "DELETION_BLOCKED",
             color: "text-red-500",
             accent: "bg-red-500"
         },
         {
             id: 3,
             title: "STAGE 3: OWN",
-            desc: "PERMANENT ASSET. Rep quits. Phone is wiped. You still own 100% of the client relationships.",
+            desc: "PERMANENT ASSET. The client is saved in your GodView Panel forever. Even if the rep deletes the contact, you keep 100% of the relationship.",
             status: "ASSET_SECURED",
             color: "text-yellow-500",
             accent: "bg-yellow-500"
         }
     ];
 
+    // Animation Sequence Controller
     useEffect(() => {
-        const interval = setInterval(() => {
-            setStage((prev) => (prev % 3) + 1);
-        }, 7000);
+        let timer: any;
 
-        let typingTimeout: any;
-        if (stage === 1) {
-            setRepTyping(true);
-            typingTimeout = setTimeout(() => setRepTyping(false), 3500);
-        } else {
-            setRepTyping(false);
-        }
-        
+        const runSequence = () => {
+            if (stage === 1) {
+                setSubStep(0);
+                timer = setTimeout(() => setSubStep(1), 1000); 
+                timer = setTimeout(() => setSubStep(2), 3500); 
+                timer = setTimeout(() => setStage(2), 8500);  
+            } else if (stage === 2) {
+                setSubStep(4); 
+                timer = setTimeout(() => setSubStep(5), 3000); 
+                timer = setTimeout(() => setStage(3), 8500);  
+            } else if (stage === 3) {
+                setSubStep(6); 
+                timer = setTimeout(() => {
+                    setStage(1);
+                    setSubStep(0);
+                }, 10000); 
+            }
+        };
+
+        runSequence();
+
         const handleResize = () => {
             if (containerRef.current) {
                 const maxWidth = 1200; 
@@ -65,21 +85,20 @@ const HeroMockup: React.FC = () => {
         handleResize();
 
         return () => {
-            clearInterval(interval);
-            clearTimeout(typingTimeout);
+            clearTimeout(timer);
             window.removeEventListener('resize', handleResize);
         };
     }, [stage]);
 
     return (
         <div className="relative w-full mt-2 flex flex-col items-center">
-            {/* SIMPLIFIED STAGE INDICATORS */}
-            <div className="w-full max-w-5xl mb-8 px-4">
+            {/* STAGE SELECTORS */}
+            <div className="w-full max-w-5xl mb-12 px-4">
                 <div className="grid grid-cols-3 gap-3 md:gap-6">
                     {stages.map((s) => (
                         <button 
                             key={s.id} 
-                            onClick={() => setStage(s.id)}
+                            onClick={() => { setStage(s.id); }}
                             className={`group relative p-4 md:p-6 rounded-[1.5rem] border-2 text-left transition-all duration-500 ${stage === s.id ? `bg-[#020617] border-${s.accent.split('-')[1]}-500/50 shadow-[0_10px_40px_rgba(0,0,0,0.5)]` : 'bg-gray-900/20 border-gray-800 opacity-40 grayscale hover:opacity-60'}`}
                         >
                             <div className={`h-1.5 w-12 mb-4 rounded-full ${stage === s.id ? s.accent : 'bg-gray-800'}`}></div>
@@ -91,7 +110,7 @@ const HeroMockup: React.FC = () => {
                 </div>
             </div>
 
-            {/* MAIN DESKTOP INTERFACE */}
+            {/* MAIN INTERFACE */}
             <div ref={containerRef} className="hidden lg:block relative w-full perspective-1000 origin-top" style={{ height: `${620 * scale}px` }}>
                 <div 
                     className="absolute top-0 left-0 right-0 mx-auto origin-top transform transition-all duration-500"
@@ -101,172 +120,239 @@ const HeroMockup: React.FC = () => {
                         transform: `scale(${scale})`,
                     }}
                 >
-                    <div className="flex gap-6 h-full">
+                    <div className="flex gap-8 h-full">
                         
-                        {/* 1. PROFESSIONAL COMPANY SIDE (GODVIEW PANEL) */}
-                        <div className="flex-1 flex flex-col bg-[#020617] rounded-[2.5rem] border-[10px] border-gray-900 shadow-[0_50px_100px_rgba(0,0,0,0.8)] overflow-hidden relative">
-                            {/* TOP LABEL */}
-                            <div className="h-14 bg-green-500 flex items-center justify-center shadow-lg z-50">
-                                <span className="text-black font-black uppercase italic tracking-tighter text-xl flex items-center gap-3">
-                                    <ShieldCheck size={20} /> COMPANY SIDE: ADMIN GODVIEW DASHBOARD
-                                </span>
+                        {/* LEFT: ADMIN GODVIEW PANEL (MODERNIZED ENTERPRISE UI) */}
+                        <div className="flex-1 flex flex-col bg-[#F8FAFC] rounded-[2.5rem] border-[1px] border-slate-300 shadow-[0_50px_100px_rgba(0,0,0,0.2)] overflow-hidden relative">
+                            {/* Modern Header */}
+                            <div className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-50">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center font-black text-black italic text-lg shadow-[0_4px_12px_rgba(34,197,94,0.3)]">GV</div>
+                                    <div className="h-8 w-[1px] bg-slate-200"></div>
+                                    <span className="text-slate-800 font-black uppercase tracking-tight text-base flex items-center gap-3">
+                                        GodView Command Center
+                                    </span>
+                                </div>
+                                <div className="flex items-center gap-6">
+                                    <div className="flex items-center gap-2">
+                                        <div className={`w-2 h-2 rounded-full animate-pulse ${stage === 2 ? 'bg-red-500' : stage === 3 ? 'bg-yellow-500' : 'bg-green-500'}`}></div>
+                                        <span className={`font-mono text-[10px] font-black tracking-widest uppercase ${stage === 2 ? 'text-red-600' : stage === 3 ? 'text-yellow-600' : 'text-green-600'}`}>
+                                            {stages[stage-1].status}
+                                        </span>
+                                    </div>
+                                    <div className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400">
+                                        <Settings size={16} />
+                                    </div>
+                                </div>
                             </div>
 
                             <div className="flex-1 flex flex-row">
-                                {/* Navigation Sidebar */}
-                                <div className="w-16 bg-[#0f172a] border-r border-gray-800 flex flex-col items-center py-6 gap-6">
-                                    <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center font-black text-black italic text-lg shadow-[0_0_15px_rgba(34,197,94,0.4)]">GV</div>
-                                    <div className="p-2 bg-gray-800 rounded-lg text-green-400 border border-green-500/20"><MessageSquare size={20} /></div>
-                                    <Users className="text-gray-500" size={20} />
-                                    <Database className="text-gray-500" size={20} />
-                                    <BarChart3 className="text-gray-500" size={20} />
-                                    <Settings className="text-gray-500 mt-auto" size={20} />
+                                {/* Professional Side Navigation */}
+                                <div className="w-20 bg-white border-r border-slate-200 flex flex-col items-center py-8 gap-8">
+                                    <div className="p-2.5 bg-green-50 rounded-xl text-green-600 shadow-sm border border-green-100"><MessageSquare size={22} /></div>
+                                    <div className="p-2.5 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"><Users size={22} /></div>
+                                    <div className="p-2.5 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"><Cpu size={22} /></div>
+                                    <div className="p-2.5 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"><Layers size={22} /></div>
+                                    <div className="mt-auto p-2.5 text-slate-400"><Database size={22} /></div>
                                 </div>
 
-                                {/* Content Area */}
                                 <div className="flex-1 flex flex-col">
-                                    {/* Toolbar */}
-                                    <div className="h-14 bg-white/5 border-b border-gray-800 flex items-center justify-between px-6">
-                                        <div className="flex items-center gap-4">
-                                            <div className="text-white/40 text-[10px] font-black uppercase tracking-widest">Master Vault</div>
-                                            <div className="h-4 w-px bg-gray-800"></div>
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                                <span className="text-green-500 font-mono text-[10px] font-black">{stages[stage-1].status}</span>
+                                    <div className="flex-1 flex flex-row relative">
+                                        {/* REFINED CONTACTS LIST */}
+                                        <div className="w-64 bg-[#F1F5F9] border-r border-slate-200 p-4 space-y-2.5">
+                                            <div className="flex items-center justify-between mb-4 px-1">
+                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Leads</span>
+                                                <Search size={14} className="text-slate-400" />
                                             </div>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <div className="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center"><Search size={14} className="text-gray-400" /></div>
-                                            <div className="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center"><Settings size={14} className="text-gray-400" /></div>
-                                        </div>
-                                    </div>
+                                            
+                                            <div className={`p-3 rounded-2xl flex items-center gap-3 transition-all duration-500 shadow-sm border ${stage === 3 ? 'bg-yellow-500/10 border-yellow-200' : 'bg-white border-slate-200'}`}>
+                                                <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white text-xs ring-2 ring-white">M</div>
+                                                <div className="flex flex-col min-w-0">
+                                                    <span className="text-[11px] font-black text-slate-800 truncate">Michael (VIP Lead)</span>
+                                                    <span className={`text-[8px] font-bold uppercase italic ${stage === 3 ? 'text-yellow-600' : 'text-green-600'}`}>
+                                                        {stage === 3 ? "PERMANENT ASSET" : "LIVE CAPTURING"}
+                                                    </span>
+                                                </div>
+                                            </div>
 
-                                    <div className="flex-1 flex flex-row">
-                                        {/* Contacts List */}
-                                        <div className="w-56 bg-[#0f172a]/50 border-r border-gray-800 p-4">
-                                            <div className="space-y-3">
-                                                <div className="p-3 bg-green-500/10 border border-green-500/30 rounded-xl flex items-center gap-3">
-                                                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white text-xs">M</div>
+                                            {/* Dummy Contacts */}
+                                            {['Sarah J.', 'David M.', 'Alex R.', 'Linda C.', 'Kevin B.'].map((name, i) => (
+                                                <div key={i} className="p-3 bg-white border border-slate-100 rounded-2xl flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity">
+                                                    <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-white text-xs ${['bg-purple-500', 'bg-orange-500', 'bg-emerald-500', 'bg-pink-500', 'bg-indigo-500'][i]}`}>
+                                                        {name[0]}
+                                                    </div>
                                                     <div className="flex flex-col">
-                                                        <span className="text-[11px] font-black text-white">Michael (VIP Client)</span>
-                                                        <span className="text-[8px] text-green-500 font-bold uppercase tracking-tighter">Ownership Secured</span>
+                                                        <span className="text-[11px] font-bold text-slate-600">{name}</span>
+                                                        <span className="text-[8px] text-slate-400 font-bold uppercase">Synced</span>
                                                     </div>
                                                 </div>
-                                                <div className="p-3 bg-gray-800/20 border border-gray-800 rounded-xl flex items-center gap-3 opacity-60">
-                                                    <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center font-bold text-white text-xs">S</div>
-                                                    <span className="text-[11px] font-bold text-gray-400">Sarah Jones</span>
-                                                </div>
-                                            </div>
+                                            ))}
                                         </div>
 
-                                        {/* Chat Feed */}
-                                        <div className="flex-1 flex flex-col bg-[#020617] relative">
+                                        {/* REFINED CHAT INTERFACE */}
+                                        <div className="flex-1 flex flex-col bg-white relative">
+                                            {/* Chat Header */}
+                                            <div className="px-8 py-4 border-b border-slate-100 flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                                                    <span className="text-xs font-black text-slate-800 uppercase italic">Live Mirror: Device #8821</span>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    <div className="h-6 w-14 bg-slate-100 rounded-full"></div>
+                                                    <div className="h-6 w-6 bg-slate-100 rounded-full"></div>
+                                                </div>
+                                            </div>
+
                                             <div className="flex-1 p-8 space-y-6 overflow-hidden">
-                                                <div className="flex flex-col items-start max-w-[80%] animate-fade-in">
-                                                    <div className="p-4 bg-gray-800/40 border border-gray-800 rounded-2xl shadow-sm text-sm text-white font-medium">Ready to buy. Send the invoice?</div>
-                                                    <span className="text-[9px] text-gray-500 mt-2 font-black uppercase tracking-widest">Incoming from Michael</span>
+                                                <div className="flex flex-col items-start max-w-[85%]">
+                                                    <div className="p-4 bg-slate-100 border border-slate-200 rounded-2xl rounded-tl-none text-sm text-slate-800 font-medium shadow-sm leading-relaxed">
+                                                        Ready to buy. Send the invoice?
+                                                    </div>
+                                                    <span className="text-[9px] text-slate-400 mt-2 font-black uppercase tracking-widest italic">Michael @ 14:02</span>
                                                 </div>
                                                 
-                                                <div className="flex flex-col items-end max-w-[80%] ml-auto animate-fade-in">
-                                                    <div className="p-4 bg-green-500 text-black font-black rounded-2xl shadow-[0_10px_30px_rgba(34,197,94,0.3)] text-sm">Yes! Sending it over right now!</div>
-                                                    <span className="text-[9px] text-green-500 mt-2 font-black uppercase tracking-widest">Synced Instantly to Admin</span>
-                                                </div>
+                                                {subStep >= 2 && (
+                                                    <div className="flex flex-col items-end max-w-[85%] ml-auto relative animate-fade-in">
+                                                        <div className="absolute -left-24 top-2 bg-green-500 text-black text-[9px] font-black px-3 py-1 rounded-full shadow-lg z-10 ring-2 ring-white">MIRRORED</div>
+                                                        <div className="p-4 bg-green-50 border border-green-200 text-slate-900 font-bold rounded-2xl rounded-tr-none shadow-sm text-sm leading-relaxed">
+                                                            Wait, I'm moving to a new firm next week. Come with me for a 20% discount? My personal: +1 555-0199
+                                                        </div>
+                                                        <span className="text-[9px] text-green-600 mt-2 font-black uppercase tracking-widest italic text-right">Intercepted Poaching Attempt</span>
+                                                    </div>
+                                                )}
 
-                                                {stage >= 2 && (
-                                                    <div className="flex flex-col items-center justify-center py-6">
-                                                        <div className="px-6 py-3 bg-red-950/40 border-2 border-red-500 rounded-2xl text-red-500 text-xs font-black uppercase flex items-center gap-3 shadow-[0_0_30px_rgba(239,68,68,0.2)] animate-pulse">
-                                                            <XCircle size={16} /> ANTI-DELETE ACTIVE: DATA PRESERVED IN VAULT
+                                                {/* Anti-Delete Warning */}
+                                                {(stage === 2 || stage === 3) && (
+                                                    <div className="flex flex-col items-center justify-center py-6 animate-fade-in">
+                                                        <div className="px-6 py-4 bg-white border-2 border-red-500 rounded-[2rem] text-red-600 text-xs font-black uppercase flex items-center gap-4 shadow-[0_15px_40px_rgba(239,68,68,0.1)] animate-pulse">
+                                                            <div className="w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg"><Trash2 size={20} /></div>
+                                                            <div className="flex flex-col">
+                                                                <span className="tracking-tighter text-sm italic">DELETION ATTEMPT BLOCKED</span>
+                                                                <span className="text-[9px] text-red-400">DATA SECURED IN PERMANENT VAULT</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {stage === 3 && (
+                                                    <div className="flex flex-col items-center justify-center animate-fade-in">
+                                                        <div className="px-8 py-5 bg-white border-2 border-yellow-500 rounded-[2rem] text-yellow-600 text-xs font-black uppercase flex items-center gap-4 shadow-[0_15px_40px_rgba(234,179,8,0.1)]">
+                                                            <div className="w-10 h-10 bg-yellow-500 text-white rounded-full flex items-center justify-center shadow-lg"><Database size={20} /></div>
+                                                            <div className="flex flex-col">
+                                                                <span className="tracking-tighter text-sm italic">RELATIONSHIP RETAINED</span>
+                                                                <span className="text-[9px] text-yellow-500/70">CLIENT CONTACT EXPORTABLE AT ANY TIME</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 )}
                                             </div>
 
-                                            {/* GodView Monitoring Bar */}
-                                            <div className="p-6 bg-[#0f172a] border-t border-gray-800">
-                                                <div className="flex items-center gap-4 bg-gray-900/50 rounded-2xl px-6 py-3 border border-gray-800 group transition-all hover:border-green-500/50">
-                                                    <Eye className="text-green-500" size={18} />
-                                                    <div className="flex-1 text-[11px] text-green-500/70 font-mono italic">
-                                                        {stage === 1 && repTyping ? "GODVIEW: Intercepting live typing..." : "GODVIEW: Permanent data retention active..."}
+                                            {/* GODVIEW TYPING BAR - PERMANENT MIRROR */}
+                                            <div className="p-6 bg-slate-50 border-t border-slate-200">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex-1 bg-white h-12 rounded-full border border-slate-200 shadow-inner flex items-center px-5 gap-3">
+                                                        <Eye size={18} className="text-green-600 opacity-50" />
+                                                        <div className="flex-1 text-[13px] text-slate-700 font-bold italic truncate flex items-center gap-1">
+                                                            {subStep === 1 ? (
+                                                                <>
+                                                                    <span className="text-slate-400 not-italic mr-1 uppercase text-[10px] tracking-tighter">[MIRRORING]</span>
+                                                                    <span>Wait, I'm moving to a new fi...</span>
+                                                                    <div className="w-0.5 h-4 bg-green-500 animate-pulse"></div>
+                                                                </>
+                                                            ) : (
+                                                                <span className="text-slate-400 font-medium not-italic">Monitoring device #8821 activity...</span>
+                                                            )}
+                                                        </div>
+                                                        <Paperclip size={18} className="text-slate-300" />
                                                     </div>
-                                                    <div className="flex gap-2">
-                                                        <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-500"><Lock size={14} /></div>
-                                                        <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-black"><CheckCircle2 size={14} /></div>
+                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg transition-all ${subStep === 1 ? 'bg-green-500 scale-105' : 'bg-slate-300'}`}>
+                                                        <Send size={20} />
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            {stage === 3 && (
-                                                <div className="absolute inset-0 bg-gray-950/90 backdrop-blur-sm z-40 flex flex-col items-center justify-center text-center p-12 animate-fade-in">
-                                                    <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(34,197,94,0.6)] animate-bounce">
-                                                        <CheckCircle2 size={60} className="text-black" />
-                                                    </div>
-                                                    <span className="text-green-500 font-black text-4xl uppercase italic tracking-tighter">TOTAL OWNERSHIP</span>
-                                                    <p className="text-white/60 text-lg font-bold uppercase mt-4">Rep Phone Cleared. Your Asset Stays Here.</p>
-                                                </div>
-                                            )}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* 2. SALES REP WORK PHONE (REP SIDE) */}
-                        <div className="w-[340px] bg-gray-900 rounded-[3.5rem] border-[12px] border-gray-800 shadow-[0_40px_80px_rgba(0,0,0,0.6)] relative overflow-hidden flex flex-col p-4 shrink-0">
-                            {/* TOP LABEL */}
-                            <div className="absolute top-0 left-0 right-0 h-14 bg-gray-700 flex items-center justify-center z-50">
-                                <span className="text-white font-black uppercase italic tracking-tighter text-sm">REP SIDE (WHATSAPP APP)</span>
+                        {/* RIGHT: SALES REP WORK PHONE (THE THREAT - DARK/CYBER) */}
+                        <div className="w-[340px] bg-[#0F172A] rounded-[3.5rem] border-[12px] border-[#1E293B] shadow-[0_40px_80px_rgba(0,0,0,0.6)] relative overflow-hidden flex flex-col p-4 shrink-0">
+                            <div className="absolute top-0 left-0 right-0 h-14 bg-[#1E293B] flex items-center justify-center z-50">
+                                <span className="text-white font-black uppercase italic tracking-tighter text-[10px] opacity-70">Sales Rep Device #8821</span>
                             </div>
                             
                             <div className="flex-1 bg-black rounded-[2.8rem] overflow-hidden flex flex-col relative mt-10">
                                 {/* Whatsapp Header */}
                                 <div className="bg-[#075e54] p-4 pt-10 text-white flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center font-bold text-xs border border-white/20">M</div>
-                                    <div className="flex-1">
-                                        <div className="font-bold text-xs">Michael</div>
-                                        <div className="text-[9px] text-white/70">Online</div>
-                                    </div>
-                                    <div className="flex gap-3">
-                                        <Settings size={14} className="opacity-70" />
-                                    </div>
+                                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center font-bold text-xs italic ring-1 ring-white/20">M</div>
+                                    <div className="flex-1 font-bold text-xs italic">Michael (Client)</div>
+                                    <Settings size={14} className="opacity-50" />
                                 </div>
                                 
                                 <div className="flex-1 bg-[#e5ddd5] p-3 space-y-4 relative overflow-hidden">
                                     {stage === 1 ? (
                                         <>
-                                            <div className="p-3 bg-white rounded-xl text-[11px] shadow-sm max-w-[85%] rounded-tl-none">Ready to buy. Send the invoice?</div>
-                                            <div className="p-3 bg-[#dcf8c6] rounded-xl text-[11px] shadow-sm ml-auto max-w-[85%] rounded-tr-none font-bold">Yes! Sending it over right now!</div>
-                                            <div className="mt-8 flex justify-center">
-                                                <div className="bg-black/10 text-[9px] font-black px-4 py-1.5 rounded-full uppercase text-gray-600 tracking-widest">Secured by GodView</div>
+                                            <div className="p-3 bg-white rounded-xl text-[12px] shadow-sm max-w-[85%] rounded-tl-none text-gray-800 font-semibold">Ready to buy. Send the invoice?</div>
+                                            {subStep >= 2 && (
+                                                <div className="p-3 bg-[#dcf8c6] rounded-xl text-[12px] shadow-sm ml-auto max-w-[85%] rounded-tr-none font-bold text-gray-900 animate-fade-in border-r-2 border-green-600/20">
+                                                    Wait, I'm moving to a new firm next week. Come with me for a 20% discount? My personal: +1 555-0199
+                                                    <div className="flex justify-end mt-1">
+                                                        <div className="text-green-600 text-[10px] font-black">✓✓</div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </>
+                                    ) : subStep === 4 ? (
+                                        <>
+                                            <div className="p-3 bg-white rounded-xl text-[12px] shadow-sm max-w-[85%] rounded-tl-none text-gray-800 font-semibold opacity-30">Ready to buy. Send the invoice?</div>
+                                            <div className="p-3 bg-[#dcf8c6] rounded-xl text-[12px] shadow-sm ml-auto max-w-[85%] rounded-tr-none font-bold text-gray-900 border-2 border-red-500 bg-red-100 scale-105 transition-all">
+                                                Wait, I'm moving to a new firm next week...
+                                            </div>
+                                            {/* Deletion Popup */}
+                                            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-[60] animate-fade-in">
+                                                <div className="bg-white rounded-[2rem] p-8 w-full shadow-2xl scale-95 animate-fade-in">
+                                                    <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4"><Trash2 size={32} /></div>
+                                                    <div className="text-gray-900 font-black text-sm mb-4 uppercase tracking-tighter">DELETE CHAT?</div>
+                                                    <div className="space-y-3">
+                                                        <div className="bg-red-600 text-white py-4 rounded-2xl text-[10px] font-black cursor-pointer shadow-lg active:scale-90 transition-transform flex items-center justify-center gap-2">
+                                                            <div className="w-2 h-2 bg-white rounded-full animate-ping"></div> DELETE FOR EVERYONE
+                                                        </div>
+                                                        <div className="text-gray-400 py-2 text-[10px] font-bold uppercase tracking-widest">CANCEL</div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </>
-                                    ) : stage === 2 ? (
-                                        <div className="absolute inset-0 bg-red-900/60 backdrop-blur-md flex flex-col items-center justify-center p-8 text-center animate-fade-in">
-                                            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-6 shadow-2xl animate-pulse">
-                                                <Trash2 size={40} className="text-red-600" />
+                                    ) : subStep === 5 ? (
+                                        <div className="flex flex-col items-center justify-center h-full text-center p-8 bg-[#e5ddd5] animate-fade-in">
+                                            <div className="w-20 h-20 bg-gray-300/40 rounded-full flex items-center justify-center mb-6 border-2 border-dashed border-gray-500 animate-pulse">
+                                                <MessageSquare size={32} className="text-gray-500" />
                                             </div>
-                                            <div className="bg-red-600 text-white font-black text-sm uppercase px-4 py-2 rounded-xl shadow-lg">ATTEMPTING DELETE...</div>
-                                            <p className="text-white font-bold text-xs mt-6 leading-tight">Rep tries to hide the client conversation.</p>
+                                            <div className="text-gray-700 font-black text-xs uppercase tracking-tighter italic">CHATS WIPED</div>
+                                            <p className="text-gray-600 text-[10px] mt-4 font-bold leading-tight uppercase opacity-60">The rep thinks they are safe.</p>
                                         </div>
                                     ) : (
-                                        <div className="flex flex-col items-center justify-center h-full text-center p-8 bg-gray-100/80 animate-fade-in">
-                                            <div className="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center mb-8">
-                                                <Smartphone size={40} className="text-gray-400" />
+                                        <div className="flex flex-col items-center justify-center h-full text-center p-8 bg-gray-100 animate-fade-in">
+                                            <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mb-8 border-4 border-gray-300">
+                                                <Smartphone size={40} className="text-gray-400 opacity-50" />
                                             </div>
-                                            <div className="text-gray-900 font-black text-sm uppercase tracking-tighter italic">PHONE WIPED</div>
-                                            <div className="text-gray-500 text-[11px] mt-4 font-bold leading-relaxed">Rep quit. Phone is blank. All history cleared from device.</div>
+                                            <div className="text-gray-900 font-black text-sm uppercase italic tracking-tighter">HARD RESET COMPLETE</div>
+                                            <p className="text-gray-500 text-[11px] mt-4 font-bold leading-relaxed uppercase opacity-40">Device Disconnected from Server</p>
                                         </div>
                                     )}
                                 </div>
 
                                 {/* Typing Bar */}
                                 <div className="bg-[#f0f2f5] p-3 flex items-center gap-3 border-t border-gray-200">
-                                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400"><Paperclip size={18} /></div>
-                                    <div className="flex-1 bg-white h-10 rounded-full border border-gray-200 flex items-center px-4">
-                                        <span className="text-[11px] text-gray-400 font-bold">
-                                            {stage === 1 && repTyping ? "Yes! Sending it..." : "Type a message..."}
+                                    <div className="flex-1 bg-white h-10 rounded-full border border-gray-300 flex items-center px-4 overflow-hidden shadow-inner">
+                                        <span className="text-[12px] text-gray-800 font-bold italic truncate">
+                                            {subStep === 1 ? "Wait, I'm moving to a new fi..." : ""}
+                                            {subStep === 0 ? "Type a message..." : ""}
                                         </span>
                                     </div>
-                                    <div className="w-10 h-10 rounded-full bg-[#075e54] flex items-center justify-center text-white"><Send size={18} /></div>
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white transition-all ${subStep === 1 ? 'bg-green-500 scale-110 shadow-lg' : 'bg-[#075e54]'}`}>
+                                        <Send size={18} />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -275,26 +361,14 @@ const HeroMockup: React.FC = () => {
                 </div>
             </div>
 
-            {/* MOBILE COMPACT VERSION */}
+            {/* MOBILE ADAPTATION */}
             <div className="lg:hidden w-full max-w-sm px-4">
-                <div className="bg-gray-900 rounded-[2rem] border-2 border-green-500/50 p-8 shadow-2xl">
-                    <div className={`text-center mb-6 py-2 rounded-full border-2 border-current transition-all ${stages[stage-1].color}`}>
-                        <span className="text-sm font-black uppercase tracking-widest">{stages[stage-1].title}</span>
+                <div className="bg-gray-900 rounded-[2.5rem] border-2 border-green-500 p-8 shadow-2xl text-center">
+                    <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <Zap size={32} className="text-black" />
                     </div>
-                    <div className="space-y-4">
-                        <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
-                            <span className="text-[10px] font-black text-green-500 uppercase block mb-1">Company Dashboard</span>
-                            <p className="text-white font-bold text-sm">
-                                {stage === 1 ? "Michael's chat synced live." : stage === 2 ? "Rep hit 'Delete' — Blocked." : "Relationships secured."}
-                            </p>
-                        </div>
-                        <div className="bg-gray-800/30 p-4 rounded-2xl border border-gray-800">
-                            <span className="text-[10px] font-black text-gray-400 uppercase block mb-1">Sales Rep Phone</span>
-                            <p className="text-gray-400 text-sm italic">
-                                {stage === 1 ? "Sending WhatsApp..." : stage === 2 ? "Wiping chat history!" : "Device is empty."}
-                            </p>
-                        </div>
-                    </div>
+                    <h4 className="text-xl font-black uppercase italic mb-4">{stages[stage-1].title}</h4>
+                    <p className="text-gray-400 text-sm font-bold leading-relaxed">{stages[stage-1].desc}</p>
                 </div>
             </div>
         </div>

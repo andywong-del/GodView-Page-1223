@@ -1,11 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import CTAButton from './components/CTAButton';
 import HeroMockup from './components/HeroMockup';
 import PricingTable from './components/PricingTable';
 import { FAQItem } from './components/FAQ';
 import { SpyCamGraphic, SecurityGraphic, CloneGraphic, AutomationGraphic, OmnichannelGraphic, MindGenGraphic } from './components/Graphics';
-import { Zap, Lightbulb, Eye, CheckCircle2, Lock, ShieldCheck, Copy, XCircle, TrendingUp, Search, Users, ArrowRight, Globe, Cpu, Layers } from './components/Icons';
+import { Zap, Lightbulb, Eye, CheckCircle2, Lock, ShieldCheck, Copy, XCircle, TrendingUp, Search, Users, ArrowRight, Globe, Cpu, Layers, MessageSquare } from './components/Icons';
 import { ROW_1, ROW_2 } from './constants';
 
 const StickyBar: React.FC = () => {
@@ -164,28 +164,77 @@ const App: React.FC = () => {
                 </div>
             </section>
 
-            {/* THE SUITE - BEYOND GODVIEW */}
-            <section className="py-32 px-4 md:px-8 bg-[#020617] relative z-10">
+            {/* THE SUITE - ZIG ZAG LAYOUT */}
+            <section className="py-32 px-4 md:px-8 bg-[#020617] relative z-10 border-t border-gray-900/50">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-24">
-                        <h2 className="text-4xl md:text-7xl font-black uppercase italic tracking-tighter mb-6">The Complete <span className="text-green-500">Sales Arsenal</span></h2>
-                        <p className="text-gray-400 text-xl font-medium">Hacking growth at every single touchpoint.</p>
+                    <div className="text-center mb-32">
+                        <div className="inline-block px-4 py-1.5 bg-green-500/10 border border-green-500/30 rounded-full text-green-500 text-xs font-black uppercase italic mb-6 tracking-widest animate-pulse">
+                            ECOSYSTEM UPGRADE
+                        </div>
+                        <h2 className="text-4xl md:text-7xl font-black uppercase italic tracking-tighter mb-8 leading-none">
+                            BEYOND <span className="text-green-500">GODVIEW</span>
+                        </h2>
+                        <p className="text-gray-400 text-xl font-bold italic max-w-2xl mx-auto leading-relaxed">
+                            Apart from GodView, ChatBooster also provides the following <span className="text-white underline decoration-green-500 decoration-2">benefits for free</span> to supercharge your entire operation.
+                        </p>
                     </div>
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-                        <div className="flex flex-col items-center text-center p-8 bg-gray-900/40 rounded-[3rem] border border-gray-800/50">
-                            <AutomationGraphic />
-                            <h3 className="text-3xl font-black mb-4 uppercase italic mt-10 text-blue-400">Social Automation</h3>
-                            <p className="text-gray-400 leading-relaxed text-lg px-4 font-bold italic">Automatic DMs and comment replies that drive traffic to your WhatsApp 24/7 on autopilot.</p>
+
+                    <div className="space-y-48">
+                        {/* Suite 1: Social Automation */}
+                        <div className="flex flex-col md:flex-row items-center gap-16 md:gap-32">
+                            <div className="w-full md:w-1/2">
+                                <div className="inline-flex items-center gap-3 p-4 rounded-2xl bg-blue-500/10 mb-8 border border-blue-500/20">
+                                    <Zap className="text-blue-400 w-8 h-8" />
+                                    <span className="text-blue-400 font-black uppercase italic tracking-widest text-sm">Automated Growth</span>
+                                </div>
+                                <h3 className="text-4xl md:text-6xl font-black mb-8 text-blue-400 uppercase italic tracking-tighter leading-none">SOCIAL <span className="text-white">AUTOMATION</span></h3>
+                                <div className="block md:hidden mb-8 w-full"><AutomationGraphic /></div>
+                                <p className="text-gray-400 text-xl leading-relaxed mb-10 font-bold italic">
+                                    Stop manual outreach. Our system handles DMs and comment replies on IG, FB, and X automatically, funneling every interested prospect directly to your WhatsApp cockpit 24/7.
+                                </p>
+                                <div className="flex items-center gap-3 text-blue-400 font-black border-l-4 border-blue-500 pl-6 py-2">
+                                    <span>Zero Lead Leakage. Infinite Traffic.</span>
+                                </div>
+                            </div>
+                            <div className="w-full md:w-1/2 hidden md:block"><AutomationGraphic /></div>
                         </div>
-                        <div className="flex flex-col items-center text-center p-8 bg-gray-900/40 rounded-[3rem] border border-gray-800/50">
-                            <OmnichannelGraphic />
-                            <h3 className="text-3xl font-black mb-4 uppercase italic mt-10 text-green-500">Unified Inbox</h3>
-                            <p className="text-gray-400 leading-relaxed text-lg px-4 font-bold italic">Manage IG, FB, and WhatsApp in one cockpit. Zero tab switching. Max speed.</p>
+
+                        {/* Suite 2: Unified Inbox */}
+                        <div className="flex flex-col md:flex-row items-center gap-16 md:gap-32">
+                            <div className="w-full md:w-1/2 hidden md:block"><OmnichannelGraphic /></div>
+                            <div className="w-full md:w-1/2">
+                                <div className="inline-flex items-center gap-3 p-4 rounded-2xl bg-green-500/10 mb-8 border border-green-500/20">
+                                    <Layers className="text-green-500 w-8 h-8" />
+                                    <span className="text-green-500 font-black uppercase italic tracking-widest text-sm">Centralized Hub</span>
+                                </div>
+                                <h3 className="text-4xl md:text-6xl font-black mb-8 text-green-500 uppercase italic tracking-tighter leading-none">UNIFIED <span className="text-white">OMNI-INBOX</span></h3>
+                                <div className="block md:hidden mb-8 w-full"><OmnichannelGraphic /></div>
+                                <p className="text-gray-400 text-xl leading-relaxed mb-10 font-bold italic">
+                                    Forget tab switching. Manage Instagram, Facebook, and WhatsApp from a single, high-speed cockpit. Close deals faster when everything is in one place.
+                                </p>
+                                <div className="flex items-center gap-3 text-green-500 font-black border-l-4 border-green-500 pl-6 py-2">
+                                    <span>Max Response Speed. Zero Distractions.</span>
+                                </div>
+                            </div>
                         </div>
-                        <div className="flex flex-col items-center text-center p-8 bg-gray-900/40 rounded-[3rem] border border-gray-800/50">
-                            <MindGenGraphic />
-                            <h3 className="text-3xl font-black mb-4 uppercase italic mt-10 text-yellow-500">MindGen AI</h3>
-                            <p className="text-gray-400 leading-relaxed text-lg px-4 font-bold italic">AI cloner that scripts perfect responses based on your top seller's historical closes.</p>
+
+                        {/* Suite 3: MindGen AI */}
+                        <div className="flex flex-col md:flex-row items-center gap-16 md:gap-32">
+                            <div className="w-full md:w-1/2">
+                                <div className="inline-flex items-center gap-3 p-4 rounded-2xl bg-yellow-500/10 mb-8 border border-yellow-500/20">
+                                    <Cpu className="text-yellow-500 w-8 h-8" />
+                                    <span className="text-yellow-500 font-black uppercase italic tracking-widest text-sm">Brain Extraction</span>
+                                </div>
+                                <h3 className="text-4xl md:text-6xl font-black mb-8 text-yellow-500 uppercase italic tracking-tighter leading-none">MINDGEN <span className="text-white">AI CLONING</span></h3>
+                                <div className="block md:hidden mb-8 w-full"><MindGenGraphic /></div>
+                                <p className="text-gray-400 text-xl leading-relaxed mb-10 font-bold italic">
+                                    Our AI analyzes your top seller's historical closes and generates perfect response drafts for your junior reps. It's like having your best closer whispering in their ear.
+                                </p>
+                                <div className="flex items-center gap-3 text-yellow-500 font-black border-l-4 border-yellow-500 pl-6 py-2">
+                                    <span>Perfect Scripts. Instant Closers.</span>
+                                </div>
+                            </div>
+                            <div className="w-full md:w-1/2 hidden md:block"><MindGenGraphic /></div>
                         </div>
                     </div>
                 </div>
